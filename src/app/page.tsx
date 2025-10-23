@@ -14,7 +14,7 @@ import {
   Shield,
   ChevronRight,
   ArrowRight,
-  Mouse
+  ChevronsDown
 } from 'lucide-react'
 import { ProtectedMailLink } from '@/components/protected-mail-link'
 
@@ -308,15 +308,18 @@ export default function Home() {
         </div>
       </div>
         <div
-          className={`absolute bottom-12 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-white transition-opacity duration-500 ${showScrollHint ? 'opacity-100' : 'opacity-0'}`}
+          className={`absolute bottom-12 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-white transition-all duration-500 ${
+            showScrollHint ? 'opacity-100 backdrop-blur-sm' : 'opacity-0 backdrop-blur-0'
+          }`}
         >
-          <span className="text-xs uppercase tracking-[0.35em] text-white/70">Scroll</span>
           <a
             href="#productos"
-            className="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white/80 backdrop-blur-sm transition hover:bg-white/20"
+            className={`pointer-events-auto flex h-16 w-16 items-center justify-center rounded-full border text-white/80 transition-all duration-500 hover:bg-white/20 ${
+              showScrollHint ? 'border-white/30 bg-white/10 backdrop-blur-sm' : 'border-white/0 bg-white/0 backdrop-blur-0'
+            }`}
             aria-label="Bajar a la seccion de productos"
           >
-            <Mouse className="h-5 w-5 animate-bounce" />
+            <ChevronsDown className="h-7 w-7 animate-bounce" />
           </a>
         </div>
       </section>

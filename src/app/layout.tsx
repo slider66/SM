@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   authors: [{ name: "A. Merle 2025" }],
   icons: {
     icon: "/icon.png",
-    shortcut: "/favicon.ico",
+    shortcut: "/icon.png",
     apple: "/icon.png",
   },
   openGraph: {
