@@ -34,14 +34,23 @@ Estructura del proyecto
 - `prisma`: esquema y configuracion de la base de datos.
 - `public`: recursos estaticos (logos, imagenes promocionales).
 
-Puesta en marcha
-----------------
-```bash
-pnpm install
-pnpm dev
-```
+Estructura de la web
+--------------------
+- Landing principal (`/`, `src/app/page.tsx`): seccion hero con CTA a contacto, bloques de productos destacados, servicios y proceso de trabajo, indicadores de confianza (estadisticas y testimonios cortos) y un cierre con CTA de contacto apoyado en `ProtectedMailLink`.
+- Centro de formacion (`/formacion`, `src/app/formacion/page.tsx`): biblioteca de 17 tutoriales estructurados por nivel, rutas de aprendizaje y recursos descargables para responsables de obra.
+- Guia de recomendaciones (`/recomendaciones`, `src/app/recomendaciones/page.tsx`): guia editorial con tabla de codigos de corrugado, listado de fabricantes acreditados y buenas practicas para asegurar la trazabilidad del acero.
+- Endpoint de salud (`/api/health`, `src/app/api/health/route.ts`): responde `{"message": "Good!"}` para comprobar el estado del despliegue.
+- Ejemplo de cliente WebSocket (`examples/websocket/page.tsx`): pagina auxiliar que ilustra la conexion en tiempo real contra `/api/socketio`.
 
-La aplicacion queda disponible en `http://localhost:3000`. El servidor de Socket.IO escucha en `ws://localhost:3000/api/socketio`.
+Puesta en marcha (Windows con pwsh)
+-----------------------------------
+1. Abre una terminal PowerShell moderna (`pwsh`) y navega al directorio del proyecto: `Set-Location C:\Proyectos\SM`.
+2. (Opcional) Verifica que las versiones instaladas cumplan con los requisitos: `node -v` y `pnpm -v`.
+3. Instala las dependencias con `pnpm install`.
+4. Inicia el entorno de desarrollo ejecutando `pnpm dev`. El script lanza `nodemon`, que recompila Next.js y reinicia `server.ts` cuando detecta cambios en archivos `.ts` o `.tsx`.
+5. Conserva la terminal abierta mientras desarrollas. Usa `Ctrl+C` para detener el proceso cuando termines.
+
+La aplicacion queda disponible en `http://localhost:3000`. El servidor de Socket.IO escucha en `ws://localhost:3000/api/socketio`. Si necesitas declarar variables locales (p. ej. `DATABASE_URL`), hazlo antes de iniciar el comando con `$env:DATABASE_URL = 'valor'`.
 
 Persistencia opcional
 ---------------------
