@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -490,9 +491,11 @@ export default function Home() {
               ))}
             </div>
             <div className="mt-8 text-center">
-              <Button size="lg" variant="outline" className="border-2 px-8 py-6 text-lg">
-                Ver todos los tutoriales
-                <ArrowRight className="ml-2 h-5 w-5" />
+              <Button asChild size="lg" variant="outline" className="border-2 px-8 py-6 text-lg">
+                <Link href="/formacion">
+                  Ver todos los tutoriales
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
               </Button>
             </div>
           </div>

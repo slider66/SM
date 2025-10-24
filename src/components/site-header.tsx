@@ -15,6 +15,7 @@ export function SiteHeader() {
     { href: "/#productos", label: "Productos" },
     { href: "/#servicios", label: "Servicios" },
     { href: "/#nosotros", label: "Nosotros" },
+    { href: "/formacion", label: "Formacion" },
     { href: "/recomendaciones", label: "Recomendaciones" },
     { href: "/#contacto", label: "Contacto" },
   ];
