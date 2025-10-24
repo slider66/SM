@@ -62,6 +62,15 @@ Pruebas y calidad
 - Actualmente no hay suites de pruebas automatizadas; se recomienda anadirlas segun evolucione el proyecto.
 - Puedes habilitar analisis manual con herramientas como React Scan (`react-scan`) durante el desarrollo.
 
+Mejoras prioritarias
+--------------------
+- **SEO basico (prioridad alta)**: genera `app/sitemap.ts` y `app/robots.ts` usando la API de Next para publicar `sitemap.xml` y `robots.txt`; define `title`, `description` y campos Open Graph en cada pagina a traves del objeto `metadata`; conecta el dominio con Google Search Console para monitorizar impresiones y palabras clave clave para la captacion.
+- **Analytics (prioridad alta)**: integra una plataforma (Google Analytics 4 o Plausible) mediante un componente de layout que cargue el script de seguimiento; habilita eventos de conversion para el CTA principal y el contacto por correo, y revisa sesion, retencion y procedencia del trafico para optimizar contenidos.
+- **Formulario de contacto funcional (prioridad alta)**: garantiza la entrega de correos del CTA principal, muestra confirmacion visible al usuario tras enviarlo y protege el endpoint con un honeypot simple o reCAPTCHA para limitar spam y bots.
+- **Performance basico (prioridad media)**: optimiza imagenes con `next/image` en formatos WebP o AVIF y tamanos acordes a cada breakpoint, ejecuta auditorias Lighthouse en mobile y desktop, y apoya el despliegue en una CDN (la propia Vercel u otra) si se espera trafico internacional.
+- **Backup de contenido (prioridad media)**: programa copias de seguridad periodicas de los 17 tutoriales y guias para evitar perdida de conocimiento; almacena los exports en un repositorio seguro (S3, Drive corporativo o Git privado) junto a un registro de actualizaciones.
+- **Actualizaciones de seguridad (prioridad media)**: revisa trimestralmente las versiones de Next.js, dependencias de React y librerias de UI; aplica parches con herramientas como `pnpm outdated` y `pnpm up --latest` y valida que no introduzcan regresiones antes de desplegar.
+
 Despliegue
 ----------
 1. Ejecuta `pnpm build` para generar los artefactos de produccion.
