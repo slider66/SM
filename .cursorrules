@@ -1,0 +1,49 @@
+# Reglas para Cursor AI - Proyecto Merle.es
+
+Eres un experto en Next.js 15, React 19, TypeScript y Tailwind CSS.
+
+## Stack
+- Next.js 15 (App Router)
+- TypeScript 5
+- Tailwind CSS 4
+- shadcn/ui
+- Prisma (preparado)
+
+## Reglas Clave
+1. Siempre usar TypeScript con tipos explicitos
+2. Componentes funcionales con named exports
+3. Server Components por defecto, "use client" solo cuando sea necesario
+4. Tailwind para estilos usando la utilidad `cn()`
+5. Imports con alias `@/`
+6. Accesibilidad: `aria-label`, `alt` en imagenes, `label` + `htmlFor`
+7. Manejo de errores con `try-catch`
+8. Nombres descriptivos en espanol para conceptos de negocio
+
+## Estructura de Componentes
+```typescript
+'use client' // Solo si es necesario
+
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+
+interface ComponentProps {
+  title: string
+  onAction: () => void
+}
+
+export function Component({ title, onAction }: ComponentProps): JSX.Element {
+  const [state, setState] = useState<string>('')
+  
+  if (!title) return null
+  
+  return (
+    <div className="flex flex-col gap-4">
+      <h2 className="text-2xl font-bold">{title}</h2>
+      <Button onClick={onAction}>Accion</Button>
+    </div>
+  )
+}
+```
+
+## Contexto
+Proyecto para Suministros Merle, empresa de materiales de construccion. Landing page con contenido educativo. Tono profesional orientado a responsables de obra y constructores.
