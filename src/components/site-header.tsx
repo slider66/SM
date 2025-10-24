@@ -17,7 +17,7 @@ export function SiteHeader() {
     { href: "/#nosotros", label: "Nosotros" },
     { href: "/formacion", label: "Formacion" },
     { href: "/recomendaciones", label: "Recomendaciones" },
-    { href: "/#contacto", label: "Contacto" },
+    { href: "/contacto", label: "Contacto" },
   ];
 
   return (
@@ -87,3 +87,4 @@ export function SiteHeader() {
     </header>
   );
 }
+

@@ -595,9 +595,15 @@ export default function Home() {
             </Card>
           </div>
           <div className="mt-12 text-center">
-            <Button size="lg" className="bg-white px-8 py-6 text-lg text-blue-600 hover:bg-slate-100">
-              Solicitar cotizacion de armaduras
-              <ArrowRight className="ml-2 h-5 w-5" />
+            <Button
+              asChild
+              size="lg"
+              className="bg-white px-8 py-6 text-lg text-blue-600 hover:bg-slate-100"
+            >
+              <Link href="/contacto">
+                Solicitar cotizacion de armaduras
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
             </Button>
           </div>
         </div>
