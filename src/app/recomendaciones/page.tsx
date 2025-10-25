@@ -1,28 +1,92 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Image from "next/image";
+import {
+  ArrowRight,
+  Building2,
+  MapPin,
+  Search,
+  ShieldCheck,
+} from "lucide-react";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
+type ReadingItem = {
+  title: string;
+  description: string;
+  icon: typeof Search;
+};
+
+type HighlightStat = {
+  value: string;
+  label: string;
+};
 
 export const metadata: Metadata = {
   title: "Recomendaciones | Identificar marcas de corrugado",
   description:
-    "Guía práctica de Suministros Merle para reconocer las marcas de acero corrugado, garantizar la trazabilidad y localizar certificados de cada colada.",
+    "Guia practica de Suministros Merle para reconocer marcas de acero corrugado, garantizar la trazabilidad y localizar certificados de cada colada.",
 };
+
+const heroHighlights: HighlightStat[] = [
+  { value: "40%", label: "Complejidad estimada" },
+  { value: "3-4 min", label: "Tiempo medio por barra" },
+  { value: "100%", label: "Trazabilidad con certificado" },
+];
 
 const steelGrades = ["B400S", "B500S", "B400SD", "B500SD"];
 
+const readingChecklist: ReadingItem[] = [
+  {
+    title: "Localiza el inicio",
+    description:
+      "Busca la corruga normal situada entre dos corrugas engrosadas. Marca el sentido de lectura apoyandote en esa referencia.",
+    icon: Search,
+  },
+  {
+    title: "Identifica el pais",
+    description:
+      "El primer grupo de corrugas normales delimitado por una corruga engrosada indica el codigo de pais segun la norma UNE.",
+    icon: MapPin,
+  },
+  {
+    title: "Confirma el fabricante",
+    description:
+      "El siguiente bloque de corrugas normales senala el numero asignado por AENOR al fabricante de la barra.",
+    icon: Building2,
+  },
+  {
+    title: "Verifica la calidad",
+    description:
+      "Las corrugas finales identifican la familia del acero. Comprueba que coincide con el pedido y el certificado recibido.",
+    icon: ShieldCheck,
+  },
+];
+
 const countryCodes = [
   {
-    region:
-      "Alemania, Australia, Eslovaquia, Polonia y República Checa",
+    region: "Alemania, Australia, Eslovaquia, Polonia y Republica Checa",
     code: "1",
   },
   {
-    region:
-      "Bélgica, Países Bajos, Luxemburgo y Suiza",
+    region: "Belgica, Paises Bajos, Luxemburgo y Suiza",
     code: "2",
   },
   {
-    region: "Francia y Hungría",
+    region: "Francia y Hungria",
     code: "3",
   },
   {
@@ -34,12 +98,11 @@ const countryCodes = [
     code: "5",
   },
   {
-    region:
-      "Dinamarca, Estonia, Finlandia, Letonia, Lituania, Noruega y Suecia",
+    region: "Dinamarca, Estonia, Finlandia, Letonia, Lituania, Noruega y Suecia",
     code: "6",
   },
   {
-    region: "España y Portugal",
+    region: "Espana y Portugal",
     code: "7",
   },
   {
@@ -47,245 +110,353 @@ const countryCodes = [
     code: "8",
   },
   {
-    region: "Otros países diferentes a los anteriores",
+    region: "Otros paises diferentes a los anteriores",
     code: "9",
   },
 ];
 
 const manufacturers = [
-  { name: "Siderúrgica Sevillana, S.A.", countryCode: "7", manufacturerCode: "4" },
-  { name: "Compañía Española de Laminación, S.L. (CELSA)", countryCode: "7", manufacturerCode: "5" },
+  { name: "Siderurgica Sevillana, S.A.", countryCode: "7", manufacturerCode: "4" },
+  { name: "Compania Espanola de Laminacion, S.L. (CELSA)", countryCode: "7", manufacturerCode: "5" },
   { name: "Corrugados Azpeitia, S.L.", countryCode: "7", manufacturerCode: "7" },
   { name: "Corrugados Getafe, S.L.", countryCode: "7", manufacturerCode: "11" },
-  { name: "Megasas Siderúrgica, S.L.", countryCode: "7", manufacturerCode: "17" },
+  { name: "Megasas Siderurgica, S.L.", countryCode: "7", manufacturerCode: "17" },
   { name: "Nervacero, S.A.", countryCode: "7", manufacturerCode: "18" },
   { name: "Celsa Atlantic, S.L.", countryCode: "7", manufacturerCode: "23" },
-  { name: "SN MAIA Siderúrgia Nacional, S.A.", countryCode: "7", manufacturerCode: "32" },
-  { name: "SN SEIXAL Siderúrgia Nacional, S.A.", countryCode: "7", manufacturerCode: "34" },
+  { name: "SN MAIA Siderurgia Nacional, S.A.", countryCode: "7", manufacturerCode: "32" },
+  { name: "SN SEIXAL Siderurgia Nacional, S.A.", countryCode: "7", manufacturerCode: "34" },
 ];
 
-export default function RecomendacionesPage() {
+const verificationNotes = [
+  "Contrasta siempre el codigo de la barra con el certificado de colada entregado por el fabricante.",
+  "Registra fotografia y lote de cada entrega para mantener la trazabilidad en obra.",
+  "Si detectas codigos incompletos o ilegibles, bloquea la instalacion y solicita reposicion.",
+];
+
+export default function RecomendacionesPage(): JSX.Element {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white -mt-16 md:-mt-20 pt-20 md:pt-24 pb-20">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        <header className="space-y-4">
-          <p className="text-sm uppercase tracking-[0.3em] text-blue-700">
-            Recomendaciones
-          </p>
-          <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 leading-tight">
-            Cómo identificar marcas de acero corrugado
-          </h1>
-          <p className="text-lg text-slate-600">
-            Garantizar la trazabilidad del corrugado es esencial para certificar
-            la calidad estructural de la obra. En Suministros Merle insistimos en solicitar
-            siempre el certificado de colada y revisar las marcas presentes en
-            cada lote recibido.
-          </p>
-        </header>
-
-        <Card>
-          <CardHeader className="flex flex-col items-start gap-3 md:flex-row md:items-center md:justify-between">
-            <CardTitle className="text-xl font-semibold text-slate-800">
-              Resumen rápido
-            </CardTitle>
-            <div className="flex gap-4">
-              <div>
-                <p className="text-xs uppercase tracking-wide text-slate-500">
-                  Dificultad estimada
-                </p>
-                <p className="text-2xl font-bold text-slate-900">40%</p>
-              </div>
-              <div>
-                <p className="text-xs uppercase tracking-wide text-slate-500">
-                  Garantía de trazabilidad
-                </p>
-                <p className="text-2xl font-bold text-blue-700">100%</p>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-3 text-slate-600">
-            <p>
-              La lectura de las corrugas permite conocer el país, el fabricante y la
-              calidad del acero. El proceso completo requiere entre 3 y 4 minutos por
-              barra, pero evita incidencias durante la puesta en obra.
+    <div className="bg-slate-950">
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-950 py-24 text-white">
+        <div className="absolute inset-0">
+          <div className="absolute -top-24 -right-16 h-72 w-72 rounded-full bg-blue-600/30 blur-3xl" />
+          <div className="absolute bottom-0 left-10 h-80 w-80 rounded-full bg-blue-500/20 blur-3xl" />
+        </div>
+        <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <Badge className="mb-6 bg-white/10 text-white backdrop-blur">
+            Guia tecnica
+          </Badge>
+          <div className="max-w-3xl space-y-6">
+            <h1 className="text-4xl font-bold leading-tight md:text-5xl">
+              Como reconocer marcas de corrugado en obra
+            </h1>
+            <p className="text-lg text-blue-100">
+              Verificar las corrugas grabadas en cada barra asegura la calidad
+              estructural, permite localizar certificados y elimina riesgos durante
+              el hormigonado. Sigue estos pasos para confirmar pais, fabricante y
+              familia de acero en minutos.
             </p>
-            <p>
-              Recuerda: no aceptes material sin el certificado correspondiente.
-            </p>
-          </CardContent>
-        </Card>
-
-        <section className="space-y-4">
-          <h2 className="text-2xl font-semibold text-slate-900">
-            Inicio de lectura
-          </h2>
-          <p className="text-slate-600">
-            En las barras rectas, la identificación comienza con un sector donde
-            algunas corrugas aparecen engrosadas. La dirección de lectura se
-            marca con una corruga normal situada entre dos engrosadas que queda a
-            la izquierda del observador.
-          </p>
-        </section>
-
-        <section className="space-y-4">
-          <h2 className="text-2xl font-semibold text-slate-900">
-            Calidades normalizadas de acero corrugado
-          </h2>
-          <p className="text-slate-600">
-            En función de la geometría de las corrugas se distinguen las
-            siguientes calidades certificadas:
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {steelGrades.map((grade) => (
-              <span
-                key={grade}
-                className="inline-flex items-center rounded-full bg-blue-50 px-4 py-1 text-sm font-medium text-blue-700"
+          </div>
+          <div className="mt-10 flex flex-wrap gap-6">
+            {heroHighlights.map((stat) => (
+              <div
+                key={stat.label}
+                className="flex min-w-[180px] flex-col rounded-2xl border border-white/15 bg-white/10 px-5 py-4"
               >
-                {grade}
-              </span>
+                <span className="text-3xl font-semibold text-white">
+                  {stat.value}
+                </span>
+                <span className="text-sm text-blue-100">{stat.label}</span>
+              </div>
             ))}
           </div>
-          <ul className="list-disc space-y-2 pl-5 text-slate-600">
-            <li>
-              En el acero <strong>B500S</strong> las corrugas mantienen una
-              inclinación uniforme.
-            </li>
-            <li>
-              En el acero <strong>B400S</strong> destaca un mayor espacio entre
-              corrugas.
-            </li>
-            <li>
-              En las calidades <strong>SD</strong> la identificación puede
-              realizarse en cualquiera de los sectores.
-            </li>
-          </ul>
-          <figure className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-            <img
-              src="/identificar-marcas.webp"
-              alt="Referencia visual de marcas en barras corrugadas B400S, B500S, B400SD y B500SD."
-              className="h-auto w-full object-cover"
-              loading="lazy"
-            />
-            <figcaption className="bg-slate-50 px-4 py-2 text-sm text-slate-600">
-              Distribución de corrugas para localizar el inicio de lectura, el país y el código de fabricante en cada calidad.
-            </figcaption>
-          </figure>
-        </section>
+          <div className="mt-10">
+            <Button
+              asChild
+              size="lg"
+              className="bg-white px-8 py-6 text-lg text-blue-700 hover:bg-blue-50"
+            >
+              <Link href="/contacto">
+                Hablar con un tecnico
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
 
-        <section className="space-y-6">
-          <div className="space-y-3">
-            <h2 className="text-2xl font-semibold text-slate-900">
-              País de fabricación
-            </h2>
-            <p className="text-slate-600">
-              Tras el inicio de lectura, un grupo de corrugas normales delimitado
-              por una corruga engrosada identifica el país de origen. España
-              utiliza el código <strong>7</strong>.
-            </p>
-          </div>
-          <div className="overflow-x-auto rounded-lg border border-slate-200">
-            <table className="min-w-full divide-y divide-slate-200 bg-white">
-              <thead className="bg-slate-50">
-                <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                    País / Región
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                    Código
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {countryCodes.map((entry) => (
-                  <tr key={entry.code}>
-                    <td className="px-4 py-3 text-sm text-slate-700">
-                      {entry.region}
-                    </td>
-                    <td className="px-4 py-3 text-sm font-semibold text-slate-900">
-                      {entry.code}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
+      <section className="relative z-10 -mt-20 pb-24">
+        <div className="mx-auto max-w-6xl space-y-16 px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+            <Card className="rounded-3xl border-blue-100/60 bg-white/95 shadow-2xl shadow-blue-100/40">
+              <CardHeader>
+                <CardTitle className="text-2xl text-slate-900">
+                  Resumen operativo
+                </CardTitle>
+                <CardDescription className="text-slate-600">
+                  La lectura completa dura menos de cinco minutos y permite validar la procedencia real de cada lote recibido.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid gap-4 sm:grid-cols-3">
+                  <div className="rounded-2xl border border-blue-100 bg-blue-50/80 p-4">
+                    <p className="text-xs uppercase tracking-wide text-blue-700">
+                      Tiempo estimado
+                    </p>
+                    <p className="mt-2 text-2xl font-semibold text-slate-900">
+                      3-4 min
+                    </p>
+                    <p className="mt-1 text-xs text-blue-900/70">
+                      Revision por barra
+                    </p>
+                  </div>
+                  <div className="rounded-2xl border border-blue-100 bg-blue-50/80 p-4">
+                    <p className="text-xs uppercase tracking-wide text-blue-700">
+                      Datos clave
+                    </p>
+                    <p className="mt-2 text-2xl font-semibold text-slate-900">
+                      Pais + fabricante
+                    </p>
+                    <p className="mt-1 text-xs text-blue-900/70">
+                      Codigo UNE en corrugas
+                    </p>
+                  </div>
+                  <div className="rounded-2xl border border-blue-100 bg-blue-50/80 p-4">
+                    <p className="text-xs uppercase tracking-wide text-blue-700">
+                      Resultado
+                    </p>
+                    <p className="mt-2 text-2xl font-semibold text-slate-900">
+                      Certificado validado
+                    </p>
+                    <p className="mt-1 text-xs text-blue-900/70">
+                      Trazabilidad total
+                    </p>
+                  </div>
+                </div>
+                <p className="text-sm text-slate-600">
+                  Recuerda rechazar cualquier remesa que no incluya certificado
+                  de colada o presente corrugas ilegibles. La responsabilidad de
+                  la trazabilidad recae sobre quien recibe el material.
+                </p>
+              </CardContent>
+            </Card>
 
-        <section className="space-y-6">
-          <div className="space-y-3">
-            <h2 className="text-2xl font-semibold text-slate-900">
-              Código de fabricante (España)
-            </h2>
-            <p className="text-slate-600">
-              Cada fabricante dispone de un número asignado por AENOR. Se marca
-              mediante un segundo bloque de corrugas normales, limitado por otra
-              corruga engrosada. En determinadas referencias, las decenas y
-              unidades se separan con una corruga engrosada intermedia.
-            </p>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Card className="cursor-zoom-in overflow-hidden rounded-3xl border-blue-100/60 bg-white/95 shadow-2xl shadow-blue-100/40">
+                  <div className="group relative aspect-[4/3] w-full overflow-hidden">
+                    <Image
+                      src="/identificar-marcas.webp"
+                      alt="Referencias visuales para identificar marcas de corrugado"
+                      fill
+                      className="select-none transition-transform duration-500 ease-out group-hover:scale-105"
+                      draggable={false}
+                      onContextMenu={(event) => event.preventDefault()}
+                      style={{ objectFit: "contain" }}
+                      priority={false}
+                      sizes="(min-width: 1024px) 420px, 100vw"
+                    />
+                  </div>
+                </Card>
+              </DialogTrigger>
+              <DialogContent
+                className="max-w-5xl border-none bg-transparent p-0 shadow-none"
+                aria-label="Identificar marcas de corrugado"
+              >
+                <div className="relative w-full overflow-hidden rounded-3xl bg-white">
+                  <Image
+                    src="/identificar-marcas.webp"
+                    alt="Referencias visuales para identificar marcas de corrugado"
+                    width={1600}
+                    height={1200}
+                    className="h-auto w-full select-none"
+                    draggable={false}
+                    priority={false}
+                    onContextMenu={(event) => event.preventDefault()}
+                  />
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
-          <div className="overflow-x-auto rounded-lg border border-slate-200">
-            <table className="min-w-full divide-y divide-slate-200 bg-white">
-              <thead className="bg-slate-50">
-                <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                    Fabricante
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                    Código país
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                    Código fabricante
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {manufacturers.map((manufacturer) => (
-                  <tr key={manufacturer.name}>
-                    <td className="px-4 py-3 text-sm text-slate-700">
-                      {manufacturer.name}
-                    </td>
-                    <td className="px-4 py-3 text-sm font-semibold text-slate-900">
-                      {manufacturer.countryCode}
-                    </td>
-                    <td className="px-4 py-3 text-sm font-semibold text-slate-900">
-                      {manufacturer.manufacturerCode}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
 
-        <section className="space-y-4">
-          <h2 className="text-2xl font-semibold text-slate-900">
-            Buenas prácticas finales
-          </h2>
-          <p className="text-slate-600">
-            El código marcado en la barra coincide con el certificado emitido
-            para cada colada según UNE. Asegúrate de contrastar ambos registros
-            antes de instalar las armaduras.
-          </p>
-          <Card className="border-blue-100 bg-blue-50">
-            <CardContent className="space-y-3 py-6">
-              <p className="text-base font-semibold text-blue-800">
-                Siempre pida el certificado correspondiente a la colada del corrugado.
+          <section className="space-y-8">
+            <div className="space-y-4">
+              <h2 className="text-3xl font-semibold text-white">
+                Lectura paso a paso
+              </h2>
+              <p className="max-w-3xl text-sm text-slate-300">
+                La norma UNE 36068 establece el patron de corrugas que codifica la
+                informacion esencial. Analiza cada bloque siguiendo el orden
+                indicado para evitar errores durante el control de calidad en obra.
               </p>
-              <p className="text-sm text-blue-700">— A. Merle</p>
-            </CardContent>
-          </Card>
-        </section>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {readingChecklist.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <div
+                    key={item.title}
+                    className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 text-slate-100 shadow-lg shadow-slate-900/40"
+                  >
+                    <Icon className="h-5 w-5 text-blue-300" />
+                    <h3 className="mt-4 text-sm font-semibold text-white">
+                      {item.title}
+                    </h3>
+                    <p className="mt-2 text-xs text-slate-300">
+                      {item.description}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
 
-        <footer className="border-t border-slate-200 pt-8">
-          <p className="text-sm text-slate-500">
-            ¿Necesitas ayuda para interpretar las marcas o solicitar certificados?{" "}
-            <Link href="/#contacto" className="text-blue-700 underline decoration-blue-200 underline-offset-4">
-              Contacta con nuestro equipo técnico
-            </Link>
-            .
-          </p>
-        </footer>
-      </div>
+            <Card className="rounded-3xl border-slate-800/50 bg-slate-900/80 text-slate-100 shadow-xl shadow-slate-900/40">
+              <CardHeader>
+                <CardTitle className="text-2xl font-semibold text-white">
+                  Calidades mas habituales
+                </CardTitle>
+                <CardDescription className="text-slate-300">
+                  Estas series cubren la mayoria de estructuras de hormigon armado en vivienda
+                  residencial y obra publica.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-3">
+                  {steelGrades.map((grade) => (
+                    <Badge
+                      key={grade}
+                      className="rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white"
+                    >
+                      {grade}
+                    </Badge>
+                  ))}
+                </div>
+                <p className="mt-6 text-xs text-slate-400">
+                  Verifica siempre que el pedido, el albaran y la marca en barra comparten la misma
+                  familia de acero.
+                </p>
+              </CardContent>
+            </Card>
+          </section>
+
+          <section className="grid gap-6 lg:grid-cols-2">
+            <Card className="rounded-3xl border-blue-100/60 bg-white/95 shadow-xl shadow-blue-100/40">
+              <CardHeader>
+                <CardTitle className="text-2xl text-slate-900">
+                  Codigos de pais (UNE 36068)
+                </CardTitle>
+                <CardDescription className="text-slate-600">
+                  Tras el inicio de lectura encontraras un grupo de corrugas normales que define el origen del acero.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-hidden rounded-2xl border border-blue-100">
+                  <table className="min-w-full divide-y divide-blue-100 text-sm">
+                    <thead className="bg-blue-50/60 text-blue-700">
+                      <tr>
+                        <th className="px-4 py-3 text-left font-semibold uppercase tracking-wide">
+                          Pais o region
+                        </th>
+                        <th className="px-4 py-3 text-left font-semibold uppercase tracking-wide">
+                          Codigo
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-blue-100 bg-white/95 text-slate-700">
+                      {countryCodes.map((entry) => (
+                        <tr key={entry.code}>
+                          <td className="px-4 py-3">{entry.region}</td>
+                          <td className="px-4 py-3 font-semibold text-slate-900">
+                            {entry.code}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="rounded-3xl border-blue-100/60 bg-white/95 shadow-xl shadow-blue-100/40">
+              <CardHeader>
+                <CardTitle className="text-2xl text-slate-900">
+                  Fabricantes en Espana
+                </CardTitle>
+                <CardDescription className="text-slate-600">
+                  Referencia cruzada para validar rapidamente el bloque de fabricante grabado en la barra.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-hidden rounded-2xl border border-blue-100">
+                  <table className="min-w-full divide-y divide-blue-100 text-sm">
+                    <thead className="bg-blue-50/60 text-blue-700">
+                      <tr>
+                        <th className="px-4 py-3 text-left font-semibold uppercase tracking-wide">
+                          Fabricante
+                        </th>
+                        <th className="px-4 py-3 text-left font-semibold uppercase tracking-wide">
+                          Codigo pais
+                        </th>
+                        <th className="px-4 py-3 text-left font-semibold uppercase tracking-wide">
+                          Codigo fabricante
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-blue-100 bg-white/95 text-slate-700">
+                      {manufacturers.map((manufacturer) => (
+                        <tr key={manufacturer.name}>
+                          <td className="px-4 py-3">{manufacturer.name}</td>
+                          <td className="px-4 py-3 font-semibold text-slate-900">
+                            {manufacturer.countryCode}
+                          </td>
+                          <td className="px-4 py-3 font-semibold text-slate-900">
+                            {manufacturer.manufacturerCode}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+
+          <section>
+            <Card className="rounded-3xl border-blue-100 bg-blue-50/90 shadow-xl shadow-blue-100/40">
+              <CardContent className="space-y-6 p-8">
+                <div>
+                  <h3 className="text-2xl font-semibold text-blue-900">
+                    Buenas practicas finales
+                  </h3>
+                  <p className="mt-2 text-sm text-blue-900/80">
+                    Documenta el control de calidad de cada lote para mantener la
+                    trazabilidad exigida por la direccion facultativa.
+                  </p>
+                </div>
+                <ul className="space-y-3 text-sm text-blue-900/80">
+                  {verificationNotes.map((note) => (
+                    <li key={note} className="flex items-start gap-2">
+                      <span className="mt-1 h-2 w-2 rounded-full bg-blue-600" />
+                      <span>{note}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div>
+                  <Button
+                    asChild
+                    className="bg-blue-900 px-6 py-5 text-white hover:bg-blue-950"
+                  >
+                    <Link href="/contacto">
+                      Necesito ayuda con certificados
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+        </div>
+      </section>
     </div>
   );
 }
+
