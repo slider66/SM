@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
 import {
   ArrowRight,
   Building2,
@@ -21,8 +20,12 @@ import {
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { ProtectedImage } from "@/components/ui/protected-image";
 
 type ReadingItem = {
   title: string;
@@ -244,13 +247,12 @@ export default function RecomendacionesPage(): JSX.Element {
               <DialogTrigger asChild>
                 <Card className="cursor-zoom-in overflow-hidden rounded-3xl border-blue-100/60 bg-white/95 shadow-2xl shadow-blue-100/40">
                   <div className="group relative aspect-[4/3] w-full overflow-hidden">
-                    <Image
+                    <ProtectedImage
                       src="/identificar-marcas.webp"
                       alt="Referencias visuales para identificar marcas de corrugado"
                       fill
                       className="select-none transition-transform duration-500 ease-out group-hover:scale-105"
                       draggable={false}
-                      onContextMenu={(event) => event.preventDefault()}
                       style={{ objectFit: "contain" }}
                       priority={false}
                       sizes="(min-width: 1024px) 420px, 100vw"
@@ -258,12 +260,15 @@ export default function RecomendacionesPage(): JSX.Element {
                   </div>
                 </Card>
               </DialogTrigger>
-              <DialogContent
-                className="max-w-5xl border-none bg-transparent p-0 shadow-none"
-                aria-label="Identificar marcas de corrugado"
-              >
+              <DialogContent className="max-w-5xl border-none bg-transparent p-0 shadow-none">
+                <DialogHeader className="sr-only">
+                  <DialogTitle>Identificar marcas de corrugado</DialogTitle>
+                  <DialogDescription>
+                    Vista ampliada de la referencia visual para identificar corrugas.
+                  </DialogDescription>
+                </DialogHeader>
                 <div className="relative w-full overflow-hidden rounded-3xl bg-white">
-                  <Image
+                  <ProtectedImage
                     src="/identificar-marcas.webp"
                     alt="Referencias visuales para identificar marcas de corrugado"
                     width={1600}
@@ -271,7 +276,6 @@ export default function RecomendacionesPage(): JSX.Element {
                     className="h-auto w-full select-none"
                     draggable={false}
                     priority={false}
-                    onContextMenu={(event) => event.preventDefault()}
                   />
                 </div>
               </DialogContent>
