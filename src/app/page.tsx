@@ -1,23 +1,24 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import Link from 'next/link'
+import { ProtectedMailLink } from '@/components/protected-mail-link'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import {
-  Phone,
+  ArrowRight,
+  ChevronRight,
+  ChevronsDown,
+  Clock,
   Mail,
   MapPin,
-  Clock,
   Package,
-  Truck,
+  Phone,
   Shield,
-  ChevronRight,
-  ArrowRight,
-  ChevronsDown
+  Truck
 } from 'lucide-react'
-import { ProtectedMailLink } from '@/components/protected-mail-link'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
 type Service = {
   icon: typeof Package
@@ -539,13 +540,21 @@ export default function Home() {
               </div>
             </div>
             <div className="relative">
-              <div className="flex aspect-square items-center justify-center rounded-2xl bg-gradient-to-br from-blue-100 to-blue-200">
-                <div className="space-y-4 text-center">
-                  <div className="mx-auto flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-r from-blue-700 to-blue-900">
+              <div className="relative aspect-square overflow-hidden rounded-2xl shadow-xl">
+                <Image
+                  src="/aerea_suministros_merle-1024x563.webp"
+                  alt="Vista aérea de las instalaciones de Suministros Merle."
+                  fill
+                  className="object-cover object-[30%_center]"
+                  sizes="(min-width: 1024px) 480px, 100vw"
+                  priority
+                />
+                <div className="absolute inset-0 flex flex-col items-center justify-center space-y-4 px-6 text-center text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.55)]">
+                  <div className="mx-auto flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-r from-blue-700 to-blue-500 shadow-lg shadow-blue-900/40">
                     <Shield className="h-16 w-16 text-white" />
                   </div>
-                  <p className="text-2xl font-bold text-slate-900">Calidad y confianza</p>
-                  <p className="text-sm text-slate-600">Tu socio estrategico en ferralla</p>
+                  <p className="text-2xl font-bold">Calidad y confianza</p>
+                  <p className="text-sm text-blue-100">Tu socio estrategico en ferralla</p>
                 </div>
               </div>
             </div>
